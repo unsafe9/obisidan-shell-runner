@@ -1,94 +1,240 @@
-# Obsidian Sample Plugin
+# Shell Runner for Obsidian
 
-This is a sample plugin for Obsidian (https://obsidian.md).
+> **⚠️ Development Discontinued**
+> 
+> During the development of this plugin, I discovered the [obsidian-shellcommands](https://github.com/Taitava/obsidian-shellcommands) plugin and have decided to discontinue this project. 
+> 
+> **Please use the above plugin instead for more mature and stable functionality.**
 
-This project uses TypeScript to provide type checking and documentation.
-The repo depends on the latest plugin API (obsidian.d.ts) in TypeScript Definition format, which contains TSDoc comments describing what it does.
+A powerful shell command executor plugin for Obsidian that provides a Quick Switcher-style interface for executing shell commands with dynamic context parameters.
 
-This sample plugin demonstrates some of the basic functionality the plugin API can do.
-- Adds a ribbon icon, which shows a Notice when clicked.
-- Adds a command "Open Sample Modal" which opens a Modal.
-- Adds a plugin setting tab to the settings page.
-- Registers a global click event and output 'click' to the console.
-- Registers a global interval which logs 'setInterval' to the console.
+## ✨ Key Features
 
-## First time developing plugins?
+### 🚀 Quick Switcher Style Interface
+- **Fuzzy Search**: Quickly find commands by name or description
+- **Fast Execution**: Execute commands with a single keystroke
+- **Command Palette Integration**: Access commands through Obsidian's command palette
+- **Hotkey Support**: Assign custom hotkeys to frequently used commands
 
-Quick starting guide for new plugin devs:
+### 🔧 Dynamic Parameter System
+Automatically inject context information into your commands:
 
-- Check if [someone already developed a plugin for what you want](https://obsidian.md/plugins)! There might be an existing plugin similar enough that you can partner up with.
-- Make a copy of this repo as a template with the "Use this template" button (login to GitHub if you don't see it).
-- Clone your repo to a local development folder. For convenience, you can place this folder in your `.obsidian/plugins/your-plugin-name` folder.
-- Install NodeJS, then run `npm i` in the command line under your repo folder.
-- Run `npm run dev` to compile your plugin from `main.ts` to `main.js`.
-- Make changes to `main.ts` (or create new `.ts` files). Those changes should be automatically compiled into `main.js`.
-- Reload Obsidian to load the new version of your plugin.
-- Enable plugin in settings window.
-- For updates to the Obsidian API run `npm update` in the command line under your repo folder.
+| Parameter | Description | Example |
+|-----------|-------------|---------|
+| `{activeNote}` | Current active note filename | `MyNote.md` |
+| `{activeNotePath}` | Full path of current note | `/vault/folder/MyNote.md` |
+| `{activeNoteContent}` | Complete content of current note | `# Title\nContent...` |
+| `{selectedText}` | Currently selected text | `selected text` |
+| `{currentDirectory}` | Directory containing current note | `/vault/folder` |
+| `{vaultPath}` | Root path of Obsidian vault | `/vault` |
+| `{currentLine}` | Content of line where cursor is located | `This is the current line` |
+| `{currentLineNumber}` | Current line number (1-based) | `42` |
+| `{cursorPosition}` | Cursor position (line:column) | `42:15` |
 
-## Releasing new releases
+### 💬 Interactive Prompts
+- **Multiple Prompts**: Define multiple named prompts per command
+- **Dynamic Input**: Use `{prompt:keyword}` to request user input at runtime
+- **Flexible UI**: Clean modal interface for prompt collection
 
-- Update your `manifest.json` with your new version number, such as `1.0.1`, and the minimum Obsidian version required for your latest release.
-- Update your `versions.json` file with `"new-plugin-version": "minimum-obsidian-version"` so older versions of Obsidian can download an older version of your plugin that's compatible.
-- Create new GitHub release using your new version number as the "Tag version". Use the exact version number, don't include a prefix `v`. See here for an example: https://github.com/obsidianmd/obsidian-sample-plugin/releases
-- Upload the files `manifest.json`, `main.js`, `styles.css` as binary attachments. Note: The manifest.json file must be in two places, first the root path of your repository and also in the release.
-- Publish the release.
+### 🎯 Smart Execution Modes
+- **Normal Execution**: Run commands and display results in a modal
+- **Background Execution**: Run commands silently with notification-only feedback
+- **Result Actions**: Copy, insert at cursor, replace selection, or append to note
 
-> You can simplify the version bump process by running `npm version patch`, `npm version minor` or `npm version major` after updating `minAppVersion` manually in `manifest.json`.
-> The command will bump version in `manifest.json` and `package.json`, and add the entry for the new version to `versions.json`
+### 🐚 Advanced Shell Support
+- **Multi-Shell Support**: bash, zsh, fish, csh, tcsh, dash, PowerShell, cmd
+- **Auto-Detection**: Automatically detects your system's default shell
+- **Login Shell Option**: Use login shells (-l flag) to load profile files
+- **Cross-Platform**: Works on macOS, Linux, and Windows
 
-## Adding your plugin to the community plugin list
+### 🔒 Robust Security
+- **Shell Escaping**: Advanced parameter escaping using `shescape` library
+- **Safe Execution**: Prevents shell injection attacks
+- **User Control**: All commands are user-defined and managed
 
-- Check the [plugin guidelines](https://docs.obsidian.md/Plugins/Releasing/Plugin+guidelines).
-- Publish an initial version.
-- Make sure you have a `README.md` file in the root of your repo.
-- Make a pull request at https://github.com/obsidianmd/obsidian-releases to add your plugin.
+## 🚀 Quick Start
 
-## How to use
+### Installation
+1. Download the latest release
+2. Extract to `.obsidian/plugins/shell-runner/` in your vault
+3. Enable the plugin in Settings → Community plugins
 
-- Clone this repo.
-- Make sure your NodeJS is at least v16 (`node --version`).
-- `npm i` or `yarn` to install dependencies.
-- `npm run dev` to start compilation in watch mode.
+### Basic Usage
+1. **Open Shell Runner**: 
+   - Use ribbon icon (terminal symbol)
+   - Command palette: "Shell Runner: Open command selector"
+   - Hotkey: Assign in Settings → Hotkeys
 
-## Manually installing the plugin
+2. **Execute Commands**:
+   - Type to search commands
+   - Press `Enter` to execute
+   - View results in the modal
 
-- Copy over `main.js`, `styles.css`, `manifest.json` to your vault `VaultFolder/.obsidian/plugins/your-plugin-id/`.
+3. **Add Your First Command**:
+   - Go to Settings → Shell Runner
+   - Click "Add Command"
+   - Configure name, description, and shell command
 
-## Improve code quality with eslint (optional)
-- [ESLint](https://eslint.org/) is a tool that analyzes your code to quickly find problems. You can run ESLint against your plugin to find common bugs and ways to improve your code. 
-- To use eslint with this project, make sure to install eslint from terminal:
-  - `npm install -g eslint`
-- To use eslint to analyze this project use this command:
-  - `eslint main.ts`
-  - eslint will then create a report with suggestions for code improvement by file and line number.
-- If your source code is in a folder, such as `src`, you can use eslint with this command to analyze all files in that folder:
-  - `eslint ./src/`
+## 📋 Command Examples
 
-## Funding URL
+### File Operations
+```bash
+# List files in current note's directory
+ls -la "{currentDirectory}"
 
-You can include funding URLs where people who use your plugin can financially support it.
+# Backup current note with timestamp
+cp "{activeNotePath}" "{currentDirectory}/backup_{activeNote}_$(date +%Y%m%d_%H%M%S)"
 
-The simple way is to set the `fundingUrl` field to your link in your `manifest.json` file:
-
-```json
-{
-    "fundingUrl": "https://buymeacoffee.com"
-}
+# Find files containing selected text
+grep -r "{selectedText}" "{vaultPath}"
 ```
 
-If you have multiple URLs, you can also do:
+### Git Operations
+```bash
+# Check git status
+cd "{vaultPath}" && git status
 
-```json
-{
-    "fundingUrl": {
-        "Buy Me a Coffee": "https://buymeacoffee.com",
-        "GitHub Sponsor": "https://github.com/sponsors",
-        "Patreon": "https://www.patreon.com/"
-    }
-}
+# Commit current note
+cd "{vaultPath}" && git add "{activeNotePath}" && git commit -m "Update {activeNote}"
+
+# Show git log for current note
+cd "{vaultPath}" && git log --oneline "{activeNotePath}"
 ```
 
-## API Documentation
+### Text Processing
+```bash
+# Count words in selected text
+echo "{selectedText}" | wc -w
 
-See https://github.com/obsidianmd/obsidian-api
+# Convert selected text to uppercase
+echo "{selectedText}" | tr '[:lower:]' '[:upper:]'
+
+# Search and replace in current note content
+echo "{activeNoteContent}" | sed 's/old/new/g'
+```
+
+### Interactive Commands with Prompts
+```bash
+# Search with user input
+grep -r "{prompt:search_term}" "{vaultPath}"
+
+# Create file with custom name
+touch "{currentDirectory}/{prompt:filename}.md"
+
+# Run custom git command
+cd "{vaultPath}" && git {prompt:git_command}
+```
+
+## ⚙️ Configuration
+
+### General Settings
+- **Default Working Directory**: Base directory for command execution
+- **Shell Program**: Choose your preferred shell (auto-detect, bash, zsh, etc.)
+- **Use Login Shell**: Enable to load profile files (.zshrc, .bash_profile, etc.)
+- **Show Notifications**: Control execution feedback
+- **Max Output Length**: Limit command output size
+
+### Command Configuration
+Each command can be configured with:
+- **Basic Info**: Name, description, shell command
+- **Working Directory**: Absolute or relative path
+- **Background Execution**: Run without showing result modal
+- **Prompts**: Define interactive input parameters
+- **Default Action**: Auto-copy, insert, or append results
+
+### Security Settings
+- **Shell Escaping**: Always enabled for parameter safety
+- **Command Validation**: User-defined commands only
+- **Path Restrictions**: Configurable working directory limits
+
+## 🔧 Advanced Features
+
+### Shell Environment Loading
+The plugin can load your shell configuration:
+- **Auto-detection**: Finds your system's default shell
+- **Login Shell Mode**: Loads `.zshrc`, `.bash_profile`, etc.
+- **Environment Variables**: Access your custom PATH and aliases
+- **Cross-platform**: Works on Unix-like systems and Windows
+
+### Command Palette Integration
+- All enabled commands appear in Obsidian's command palette
+- Assign hotkeys to frequently used commands
+- Quick access without opening the main interface
+
+### Flexible Output Handling
+- **Modal Display**: Rich formatting with copy/action buttons
+- **Background Mode**: Silent execution with notifications
+- **Direct Integration**: Insert results directly into notes
+
+## 🛠️ Development
+
+### Building from Source
+```bash
+# Clone repository
+git clone <repository-url>
+cd shell-runner
+
+# Install dependencies
+npm install
+
+# Development mode (watch)
+npm run dev
+
+# Production build
+npm run build
+```
+
+### Project Structure
+```
+src/
+├── main.ts              # Plugin entry point
+├── types/               # TypeScript interfaces
+├── ui/                  # User interface components
+│   ├── command-selector-modal.ts
+│   ├── command-result-modal.ts
+│   ├── settings-tab.ts
+│   └── prompt-modal.ts
+└── utils/               # Core functionality
+    └── terminal-executor.ts
+```
+
+## 🔒 Security Considerations
+
+⚠️ **Important Security Notes**:
+
+- This plugin executes shell commands with system privileges
+- Only add commands you trust and understand
+- Parameters are automatically escaped to prevent injection attacks
+- Review commands before enabling them
+- Use absolute paths when possible
+- Avoid storing sensitive information in commands
+
+### Best Practices
+1. **Validate Commands**: Test commands manually before adding them
+2. **Use Parameters**: Leverage dynamic parameters instead of hardcoded values
+3. **Limit Scope**: Use specific working directories
+4. **Regular Review**: Periodically audit your command list
+5. **Backup**: Keep backups of your command configurations
+
+## 🤝 Contributing
+
+Contributions are welcome! Please:
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
+
+## 📄 License
+
+MIT License - see LICENSE file for details
+
+## 🆘 Support
+
+- **Issues**: Report bugs on GitHub Issues
+- **Discussions**: Join community discussions
+- **Documentation**: Check the wiki for detailed guides
+
+---
+
+**Made with ❤️ for the Obsidian community**
